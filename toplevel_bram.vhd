@@ -76,6 +76,7 @@ constant ram_size : natural := 8192;
  
 constant reset_adr : std_logic_vector(31 downto 0) :=X"0C000000";
 
+attribute mark_debug : string;
 
 signal
        clk,        -- logical CPU clock
@@ -110,6 +111,8 @@ signal  dbus_adr_o :  std_logic_vector(31 downto 2);
 signal  dbus_dat_o :  std_logic_vector(31 downto 0);
 signal  dbus_ack_i :  std_logic;
 signal  dbus_dat_i :  std_logic_vector(31 downto 0);
+
+
 
 -- Slaves
 constant slave_adr_high : natural := 25;
@@ -173,6 +176,10 @@ signal      bram_dbb_i :  std_logic_vector(31 downto 0);
 signal      bram_adrb_o : std_logic_vector(ram_adr_width-1 downto 0);
 signal      bram_enb_o :  std_logic;
 
+--attribute mark_debug of bram_dbb_i : signal is "true";
+--attribute mark_debug of bram_adrb_o : signal is "true";
+--attribute mark_debug of bram_enb_o : signal is "true";
+
 component clk_wiz_0
 port
  (-- Clock in ports
@@ -193,7 +200,7 @@ begin
     cpu_top: entity work.bonfire_cpu_top
        generic map (
          MUL_ARCH => "spartandsp",
-         REG_RAM_STYLE => "block",
+         REG_RAM_STYLE => "distributed",
          START_ADDR => reset_adr(31 downto 2),
          CACHE_LINE_SIZE_WORDS =>InstructionBurstSize,
          CACHE_SIZE_WORDS=>CacheSizeWords,
